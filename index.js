@@ -58,7 +58,7 @@ app.post("/post", (req, res) => {
   console.log(res.locals.results, 'resssssults')
   response = req.body;
   // console.log(response);
-  res.end(JSON.stringify(res.locals.results));
+  res.end(JSON.stringify({"results": res.locals.results}));
   // let data = req.body;
   // res.send("Data Received: " + JSON.stringify(data.title));
   // //create a json response
