@@ -130,17 +130,9 @@ const calculateResults = function (req, res, next) {
   next();
 };
 
-app.use(function(req, res, next) {
-  if (req.body.answers) {
-    calculateResults(req, res, next)
-  } else {
-    console.log('bad request')
-    res.locals.results = ['no results to display']
-    next()
-  }
-})
+app.use(calculateResults)
 
-app.get("/post", (req, res) => {
+app.post("/post", (req, res) => {
   response = req.body;
   res.send(JSON.stringify({ results: res.locals.results }));
 });
