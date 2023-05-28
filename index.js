@@ -10,6 +10,10 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.get("/", (req, res) => {
+  res.send("Express JS on Vercel");
+});
+
 app.get("/screener", function (req, res) {
   res.send({
     id: "abcd-123",
@@ -91,34 +95,37 @@ app.get("/screener", function (req, res) {
 
 const calculateResults = function (req, res, next) {
   const cumulative_values = {
-    depression: 0, 
-    mania: 0, 
-    substance_use: 0, 
-    anxiety: 0
+    depression: 0,
+    mania: 0,
+    substance_use: 0,
+    anxiety: 0,
   };
 
   const level_two_assesments = {
-    depression: 'PHQ-9',
-    mania: 'ASRM',
-    anxiety: 'PHQ-9',
-    substance_use: 'ASSIST'
-  }
+    depression: "PHQ-9",
+    mania: "ASRM",
+    anxiety: "PHQ-9",
+    substance_use: "ASSIST",
+  };
 
   const results = req.body.answers.reduce((acc, cur) => {
     const associatedDomain = domains.find(
       (ele) => ele.question_id === cur.question_id
-    ).domain
+    ).domain;
 
     cumulative_values[associatedDomain] += cur.value;
-    
-    if (cumulative_values[associatedDomain] >=2 && !acc.includes(level_two_assesments[associatedDomain])) {
+
+    if (
+      cumulative_values[associatedDomain] >= 2 &&
+      !acc.includes(level_two_assesments[associatedDomain])
+    ) {
       acc.push(level_two_assesments[associatedDomain]);
     }
     return acc;
   }, []);
-  
-  console.log(results, 'results')
-  res.locals.results = results
+
+  console.log(results, "results");
+  res.locals.results = results;
   next();
 };
 
@@ -126,7 +133,16 @@ app.use(calculateResults);
 
 app.post("/post", (req, res) => {
   response = req.body;
-  res.end(JSON.stringify({"results": res.locals.results}));
+  res.end(JSON.stringify({ results: res.locals.results }));
 });
 
-app.listen(2222);
+const port = process.env.PORT || 2222;
+
+app.listen(port, (err, res) => {
+  if (err) {
+    console.log(err);
+    return res.status(500).send(err.message);
+  } else {
+    console.log("[INFO] Server Running on port:", port);
+  }
+});
