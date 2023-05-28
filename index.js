@@ -94,6 +94,7 @@ app.get("/screener", function (req, res) {
 });
 
 const calculateResults = function (req, res, next) {
+  console.log("in use");
   const cumulative_values = {
     depression: 0,
     mania: 0,
@@ -129,11 +130,11 @@ const calculateResults = function (req, res, next) {
   next();
 };
 
-app.use(calculateResults);
+app.use(calculateResults)
 
 app.post("/post", (req, res) => {
   response = req.body;
-  res.end(JSON.stringify({ results: res.locals.results }));
+  res.send(JSON.stringify({ results: res.locals.results }));
 });
 
 const port = process.env.PORT || 2222;
