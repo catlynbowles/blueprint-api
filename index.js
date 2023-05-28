@@ -133,7 +133,7 @@ app.use(calculateResults);
 
 app.post("/post", (req, res) => {
   response = req.body;
-  res.end(JSON.stringify({ results: res.locals.results }));
+  res.send(JSON.stringify({ results: res.locals.results }));
 });
 
 const port = process.env.PORT || 2222;
