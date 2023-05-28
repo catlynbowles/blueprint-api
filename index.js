@@ -132,8 +132,13 @@ const calculateResults = function (req, res, next) {
 app.use(calculateResults);
 
 app.post("/post", (req, res) => {
-  response = req.body;
-  res.send(JSON.stringify({ results: res.locals.results }));
+  console.log('ayo')
+  if (req.body) {
+    response = req.body;
+    res.send(JSON.stringify({ results: res.locals.results }));
+  } else {
+    res.send('No assessments available at this time')
+  }
 });
 
 const port = process.env.PORT || 2222;
