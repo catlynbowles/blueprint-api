@@ -94,6 +94,7 @@ app.get("/screener", function (req, res) {
 });
 
 const calculateResults = function (req, res, next) {
+  console.log("in use");
   const cumulative_values = {
     depression: 0,
     mania: 0,
@@ -129,16 +130,19 @@ const calculateResults = function (req, res, next) {
   next();
 };
 
-app.use(calculateResults);
-
-app.post("/post", (req, res) => {
-  console.log('ayo')
-  if (req.body) {
-    response = req.body;
-    res.send(JSON.stringify({ results: res.locals.results }));
+app.use(function(req, res, next) {
+  if (req.body.answers) {
+    calculateResults(req, res, next)
   } else {
-    res.send('No assessments available at this time')
+    console.log('bad request')
+    res.locals.results = ['no results to display']
+    next()
   }
+})
+
+app.get("/post", (req, res) => {
+  response = req.body;
+  res.send(JSON.stringify({ results: res.locals.results }));
 });
 
 const port = process.env.PORT || 2222;
