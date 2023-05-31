@@ -11,10 +11,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get("/", (req, res) => {
-  res.send("Express JS on Vercel");
+  res.send("Welcome to my Blueprint API! Please refer to the documentation for more information.");
 });
 
 app.get("/screener", function (req, res) {
+  res.status(404).send("Oh uh, something went wrong");
   res.send({
     id: "abcd-123",
     name: "BPDS",
@@ -121,6 +122,10 @@ const calculateResults = function (req, res, next) {
       !acc.includes(level_two_assesments[associatedDomain])
     ) {
       acc.push(level_two_assesments[associatedDomain]);
+    }
+
+    if (cumulative_values.substance_use >= 1 && !acc.includes(level_two_assesments.substance_use)) {
+      acc.push(level_two_assesments.substance_use)
     }
     return acc;
   }, []);
